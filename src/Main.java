@@ -332,19 +332,16 @@ public class Main {
             TreeMap<String, HashMap<Integer, HashSet<Integer>>> firstQueryIndex = getQueryPositionalIndex(firstQueryTerms);
             HashMap<Integer, HashSet<Integer>> firstResult = intersectDoc(firstQueryTerms, firstQueryIndex);
 
-            System.out.println("intersect first query terms : " + firstResult);
 
             ArrayList<String> secondQueryTerms = new ArrayList<>(Arrays.asList(secondPart.split(" ")));
             TreeMap<String, HashMap<Integer, HashSet<Integer>>> secondQueryIndex = getQueryPositionalIndex(secondQueryTerms);
             HashMap<Integer, HashSet<Integer>> secondResult = intersectDoc(secondQueryTerms, secondQueryIndex);
 
-            System.out.println("intersect second query terms : " + secondResult);
             if (firstResult == null || firstResult.isEmpty() || secondResult == null || secondResult.isEmpty()) {
                 System.out.println("No Matching Documents found: ");
             }
             ArrayList<Integer> finalMatchedDocs = new ArrayList<>(firstResult.keySet());
             finalMatchedDocs.removeAll(secondResult.keySet());
-            System.out.println("Matched AND NOT Query: " + finalMatchedDocs);
             matchedDocs = finalMatchedDocs;
         } else if (QueryString.contains("AND")) {
             String[] splitQuery = QueryString.split("AND");
@@ -355,24 +352,20 @@ public class Main {
             String secondPart = splitQuery[1].trim();
 
             ArrayList<String> firstQueryTerms = new ArrayList<>(Arrays.asList(firstPart.split(" ")));
-            System.out.println("first query terms : " + firstQueryTerms);
             TreeMap<String, HashMap<Integer, HashSet<Integer>>> firstQueryIndex = getQueryPositionalIndex(firstQueryTerms);
             HashMap<Integer, HashSet<Integer>> firstResult = intersectDoc(firstQueryTerms, firstQueryIndex);
 
-            System.out.println("intersect first query terms : " + firstResult);
 
             ArrayList<String> secondQueryTerms = new ArrayList<>(Arrays.asList(secondPart.split(" ")));
             TreeMap<String, HashMap<Integer, HashSet<Integer>>> secondQueryIndex = getQueryPositionalIndex(secondQueryTerms);
             HashMap<Integer, HashSet<Integer>> secondResult = intersectDoc(secondQueryTerms, secondQueryIndex);
 
-            System.out.println("intersect second query terms : " + secondResult);
 
             if (firstResult == null || firstResult.isEmpty() || secondResult == null || secondResult.isEmpty()) {
                 System.out.println("No Matching Documents found: ");
             }
             ArrayList<Integer> finalMatchedDocs = new ArrayList<>(firstResult.keySet());
             finalMatchedDocs.retainAll(secondResult.keySet());
-            System.out.println("Matched AND Query: " + finalMatchedDocs);
             matchedDocs = finalMatchedDocs;
 
         } else {
