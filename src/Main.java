@@ -46,23 +46,14 @@ public class Main {
 
         Scanner in = new Scanner(System.in);
         String queryString;
-        do {
-            System.out.println("Enter Query:(home AND/AND NOT increase)");
-            queryString = in.nextLine();
-            query(queryString);
-            System.out.println();
-            System.out.println();
-            calculateQueryTF(queryString);
-            calculateQueryWTF();
-            calculateQueryTF_IDF();
-            calculateQueryLength(queryString);
-            calculateQueryNormalization();
-            printAllQueryInfo(queryString);
+        System.out.println("Enter Query:(home AND/AND NOT increase)");
+        queryString = in.nextLine();
+        query(queryString);
+        System.out.println();
+        System.out.println();
 
-            calculateAndPrintProduct();
-            printSimilarity();
-            System.out.println("to end search: stop");
-        } while (!queryString.equals("stop"));
+
+
 
 
     }
@@ -338,11 +329,20 @@ public class Main {
             HashMap<Integer, HashSet<Integer>> secondResult = intersectDoc(secondQueryTerms, secondQueryIndex);
 
             if (firstResult == null || firstResult.isEmpty() || secondResult == null || secondResult.isEmpty()) {
-                System.out.println("No Matching Documents found: ");
+                System.out.println("\nNo Matching Documents found: ");
+            }else {
+                ArrayList<Integer> finalMatchedDocs = new ArrayList<>(firstResult.keySet());
+                finalMatchedDocs.removeAll(secondResult.keySet());
+                matchedDocs = finalMatchedDocs;
+                calculateQueryTF(QueryString);
+                calculateQueryWTF();
+                calculateQueryTF_IDF();
+                calculateQueryLength(QueryString);
+                calculateQueryNormalization();
+                printAllQueryInfo(QueryString);
+                calculateAndPrintProduct();
+                printSimilarity();
             }
-            ArrayList<Integer> finalMatchedDocs = new ArrayList<>(firstResult.keySet());
-            finalMatchedDocs.removeAll(secondResult.keySet());
-            matchedDocs = finalMatchedDocs;
         } else if (QueryString.contains("AND")) {
             String[] splitQuery = QueryString.split("AND");
             if (splitQuery.length != 2) {
@@ -352,6 +352,7 @@ public class Main {
             String secondPart = splitQuery[1].trim();
 
             ArrayList<String> firstQueryTerms = new ArrayList<>(Arrays.asList(firstPart.split(" ")));
+
             TreeMap<String, HashMap<Integer, HashSet<Integer>>> firstQueryIndex = getQueryPositionalIndex(firstQueryTerms);
             HashMap<Integer, HashSet<Integer>> firstResult = intersectDoc(firstQueryTerms, firstQueryIndex);
 
@@ -362,11 +363,22 @@ public class Main {
 
 
             if (firstResult == null || firstResult.isEmpty() || secondResult == null || secondResult.isEmpty()) {
-                System.out.println("No Matching Documents found: ");
+                System.out.println("\nNo Matching Documents found. ");
+            }else{
+                ArrayList<Integer> finalMatchedDocs = new ArrayList<>(firstResult.keySet());
+                finalMatchedDocs.retainAll(secondResult.keySet());
+                System.out.println("Matched AND Query: " + finalMatchedDocs);
+                matchedDocs = finalMatchedDocs;
+                calculateQueryTF(QueryString);
+                calculateQueryWTF();
+                calculateQueryTF_IDF();
+                calculateQueryLength(QueryString);
+                calculateQueryNormalization();
+                printAllQueryInfo(QueryString);
+                calculateAndPrintProduct();
+                printSimilarity();
+
             }
-            ArrayList<Integer> finalMatchedDocs = new ArrayList<>(firstResult.keySet());
-            finalMatchedDocs.retainAll(secondResult.keySet());
-            matchedDocs = finalMatchedDocs;
 
         } else {
             ArrayList<String> termList = new ArrayList<>(Arrays.asList(QueryString.split(" ")));
@@ -375,8 +387,18 @@ public class Main {
             if (result != null && !result.isEmpty()) {
                 ArrayList<Integer> matched = new ArrayList<>(result.keySet());
                 matchedDocs = matched;
-
+                calculateQueryTF(QueryString);
+                calculateQueryWTF();
+                calculateQueryTF_IDF();
+                calculateQueryLength(QueryString);
+                calculateQueryNormalization();
+                printAllQueryInfo(QueryString);
+                calculateAndPrintProduct();
+                printSimilarity();
+            }else {
+                System.out.println("\nNo Matching Documents found. ");
             }
+
         }
     }
 
@@ -389,7 +411,6 @@ public class Main {
                 QueryPositionalIndex.put(term, new HashMap<>());
 
         }
-        System.out.println("Query Positional Index: " + QueryPositionalIndex);
         return QueryPositionalIndex;
 
     }
